@@ -1,0 +1,224 @@
+class Calculator extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state= {
+      val1: "",
+      val2: "",
+      method: "",
+      display: 0
+    };
+    
+    this.handleClick = this.handleClick.bind(this);
+    this.quantify = this.quantify.bind(this);
+    this.methodize = this.methodize.bind(this);
+    this.clearify = this.clearify.bind(this);
+    this.negative = this.negative.bind(this);
+  }
+    /* this function is for appending string numbers and decimal onto state.val1 */
+    handleClick(e){
+   
+      let value = e.target.textContent;
+      /* creates variable for the val1 number intended for checking for dublicate decimals */
+      let periodchk = this.state.val1;
+      
+      if(!(this.state.val1 == "0" && value == "0")){
+        if(!(periodchk.includes(".") && value == ".")){
+      this.setState({
+        val1: this.state.val1 + value,
+        display: this.state.val1 + value
+      });
+    }}
+    else {
+      value = "";
+    }
+    }
+  
+    methodize(e){
+      /*first making event into variable*/
+      let m = e.target.textContent;
+      
+      /*next if only one number is entered it will pass the number to val2 otherwise, with two values, will compute them based on the one method value*/
+      if(this.state.val2 == ""){
+        this.setState({
+          val2: this.state.val1
+        });} else if(this.state.val1 !== "-"){
+          if(this.state.method == "+"){
+          this.setState({
+            val2: Number(this.state.val2) + Number(this.state.val1),
+            display: Number(this.state.val2) + Number(this.state.val1),
+            method: ""
+          });} 
+          else if(this.state.method == "-"){
+            this.setState({
+              val2: Number(this.state.val2) - Number(this.state.val1),
+              display: Number(this.state.val2) - Number(this.state.val1),
+              method: ""
+            });}
+          else if(this.state.method == "*"){
+            this.setState({
+              val2: Number(this.state.val2) * Number(this.state.val1),
+              display: Number(this.state.val2) * Number(this.state.val1),
+              method: ""
+            });}
+          else if(this.state.method == "/"){
+            this.setState({
+              val2: Number(this.state.val2) / Number(this.state.val1),
+              display: Number(this.state.val2) / Number(this.state.val1),
+              method: ""
+            });}}
+      /* finally it will update val1 to empty and method to the current state.method + m event clicked method for future use. this allows more than one value for method */
+       this.setState({
+            val1: "",
+        method: m
+      });  
+          }
+     
+    
+  /*this function is when equals is pressed. it computes both values based on the one method in state and stores in display and val2 for further computation*/
+    quantify(e){
+      if(this.state.method == "+"){
+        this.setState({
+          display: Number(this.state.val2) + Number(this.state.val1),
+          val2: Number(this.state.val2) + Number(this.state.val1)
+        });
+      } else if(this.state.method == "-"){
+        this.setState({
+          display: Number(this.state.val2) - Number(this.state.val1),
+          val2: Number(this.state.val2) - Number(this.state.val1)
+        });
+      } else if(this.state.method == "*"){
+        this.setState({
+          display: Number(this.state.val2) * Number(this.state.val1),
+          val2: Number(this.state.val2) * Number(this.state.val1)
+        });
+      } else {
+        this.setState({
+          display: Number(this.state.val2) / Number(this.state.val1),
+          val2: Number(this.state.val2) / Number(this.state.val1)
+        });
+      }
+      /*finally it sets the state val1 to empty, just like the previous function, and sets method to blank as well for further use*/
+      this.setState({
+        val1: "",
+        method: ""
+        });
+    }
+  negative(e){
+    let minus = e.target.textContent;
+    if(!(this.state.val1 && this.state.val2)){
+      if(this.state.val1 == ""){
+        this.setState({
+          val1: "-"
+        });
+      } else {
+        this.setState({
+          val2: this.state.val1,
+          method: minus,
+          val1: ""
+        });
+      }
+    } else{
+      this.quantify();
+      this.setState({
+        method: minus
+      });
+    }
+  }
+  /*this function clears the state values*/
+  clearify(e){
+    this.setState({
+      val1: "",
+      val2: "",
+      method: "",
+      display: 0
+    });
+  }
+  render(){
+    return(
+      <div id="calc" className="container text-center">
+        <h1 id="title" className="mb-0">Simple Calculator</h1>
+        <h3 className="data border border-primary" id="display">{this.state.display}</h3>
+        
+        <div className="row">
+          <div className="col-3 border border-primary" 
+            id="nine" 
+            onClick={this.handleClick}
+            >9</div>
+          <div className="col-3 border border-primary" 
+            id="eight" 
+            onClick={this.handleClick}
+            >8</div>
+          <div className="col-3 border border-primary" 
+            id="seven" 
+            onClick={this.handleClick}
+            >7</div>
+          <div className="col-3 border border-primary" 
+            id="add" 
+            onClick={this.methodize}
+            >+</div>
+        </div>
+        <div className="row">
+          <div className="col-3 border border-primary" 
+            id="six" 
+            onClick={this.handleClick}
+            >6</div>
+          <div className="col-3 border border-primary" 
+            id="five" 
+            onClick={this.handleClick}
+            >5</div>
+          <div className="col-3 border border-primary" 
+            id="four" 
+            onClick={this.handleClick}
+            >4</div>
+          <div className="col-3 border border-primary" 
+            id="subtract" 
+            onClick={this.negative}
+            >-</div>
+        </div>
+        <div className="row">
+          <div className="col-3 border border-primary" 
+            id="three" 
+            onClick={this.handleClick}
+            >3</div>
+          <div className="col-3 border border-primary" 
+            id="two" 
+            onClick={this.handleClick}
+            >2</div>
+          <div className="col-3 border border-primary" 
+            id="one" 
+            onClick={this.handleClick}
+            >1</div>
+          <div className="col-3 border border-primary" 
+            id="multiply" 
+            onClick={this.methodize}
+            >*</div>
+        </div>
+        <div className="row">
+          <div id="clear" 
+            className="col-3 border border-primary" 
+            onClick={this.clearify}
+            >C</div>
+          <div className="col-3 border border-primary" 
+            id="zero" 
+            onClick={this.handleClick}
+            >0</div>
+          <div className="col-3 border border-primary" 
+            id="decimal"
+            onClick={this.handleClick}
+            >.</div>
+          <div className="col-3 border border-primary" 
+            id="divide" 
+            onClick={this.methodize}
+            >/</div>
+        </div>
+        <div className="row">
+          <div id="equals" 
+            className="col-12 border border-primary" 
+            onClick={this.quantify}
+            >=</div>
+        </div>
+        </div>
+    );
+  } 
+}
+ReactDOM.render(<Calculator />, document.getElementById('root'));
